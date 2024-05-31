@@ -1,6 +1,6 @@
 import os
 import uuid
-from datetime import date, datetime
+from django.utils import timezone
 
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -43,11 +43,11 @@ class Fundraising(models.Model):
         verbose_name_plural = "fundraisings"
 
     def __str__(self) -> str:
-        return f"{self.title} ({self.creator.email})"
+        return f"{self.title} ({self.creator.name})"
 
     @property
     def expires_at(self):
-        now = datetime.now()
+        now = timezone.now()
         time_delta = self.end_at - now
         days_left = time_delta.days
         hours_left = int(time_delta.seconds / 3600)
