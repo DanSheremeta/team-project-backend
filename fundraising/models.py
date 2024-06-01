@@ -104,6 +104,8 @@ class Lot(models.Model):
         get_user_model(),
         on_delete=models.CASCADE,
         related_name="winner_lots",
+        null=True,
+        blank=True,
     )
     creator = models.ForeignKey(
         get_user_model(),
