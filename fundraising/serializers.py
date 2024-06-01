@@ -34,10 +34,10 @@ class FundraisingListSerializer(serializers.ModelSerializer):
 
 
 class FundraisingDetailSerializer(serializers.ModelSerializer):
-    creator_name = serializers.SlugRelatedField(
+    fundraiser_name = serializers.SlugRelatedField(
         many=False,
         read_only=True,
-        slug_field="creator.name"
+        slug_field="fundraiser.name"
     )
 
     class Meta:
@@ -51,7 +51,7 @@ class FundraisingDetailSerializer(serializers.ModelSerializer):
             "state",
             "money_raised",
             "money_goal",
-            "creator_name",
+            "fundraiser_name",
             "created_at",
             "expires_at",
         )
