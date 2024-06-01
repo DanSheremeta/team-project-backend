@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from app.models import Description, Pet_information
+from app.models import Description, Pet, Lot
 
 
 class DescriptionSerializer(serializers.ModelSerializer):
@@ -9,9 +9,9 @@ class DescriptionSerializer(serializers.ModelSerializer):
         fields = ("id", "avatar", "name", "surname", "publish_date", "amount", "comment")
 
 
-class Pet_informationSerializer(serializers.ModelSerializer):
+class PetSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Pet_information
+        model = Pet
         fields = ("id",
                   "image",
                   "city",
@@ -23,3 +23,17 @@ class Pet_informationSerializer(serializers.ModelSerializer):
                   "time_created",
                   "colection_author")
 
+
+class LotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lot
+        fields = ("id",
+                  "title",
+                  "photos",
+                  "description",
+                  "start_price",
+                  "current_price",
+                  "bet_price",
+                  "current_winner",
+                  "start_date",
+                  "end_date",)
