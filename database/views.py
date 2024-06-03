@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from app.serializers import PetSerializer, DescriptionSerializer, LotSerializer
+from database.serializers import PetSerializer, DescriptionSerializer, LotSerializer
 
-from app.models import Pet, Description, Lot
+from database.models import Pet, Description, Lot
 
 
 class PetViewSet(viewsets.ModelViewSet):

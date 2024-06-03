@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from app.models import Description, Pet, Lot
+from database.models import Description, Pet, Lot
 
 
 class DescriptionSerializer(serializers.ModelSerializer):
