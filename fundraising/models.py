@@ -7,6 +7,17 @@ from django.db import models
 from django.utils.text import slugify
 
 
+class Location(models.Model):
+    city = models.CharField(max_length=255)
+    state = models.CharField(max_length=255)
+
+    def __str__(self) -> str:
+        return f"{self.state} {self.city}"
+
+    def __repr__(self) -> str:
+        return f"{self.state} {self.city}"
+
+
 def fundraising_image_file_path(instance, filename):
     _, extension = os.path.splitext(filename)
     filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
@@ -18,8 +29,12 @@ class Fundraising(models.Model):
     photo = models.ImageField(upload_to=fundraising_image_file_path)
     title = models.CharField(max_length=150)
     description = models.TextField()
-    city = models.CharField(max_length=150)
-    state = models.CharField(max_length=150)
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.CASCADE,
+        related_name="fundraisings",
+        null=True,
+    )
     money_raised = models.DecimalField(
         default=0,
         max_digits=10,
@@ -43,15 +58,11 @@ class Fundraising(models.Model):
         verbose_name_plural = "fundraisings"
 
     def __str__(self) -> str:
-        return f"{self.title} ({self.fundraiser.name})"
+        return f"{self.title} ({self.fundraiser.email})"
 
     @property
-    def expires_at(self):
-        now = timezone.now()
-        time_delta = self.end_at - now
-        days_left = time_delta.days
-        hours_left = int(time_delta.seconds / 3600)
-        return days_left, hours_left
+    def count_lots(self) -> int:
+        return self.lots.count()
 
 
 class LotCategory(models.Model):
@@ -121,12 +132,4 @@ class Lot(models.Model):
         verbose_name_plural = "lots"
 
     def __str__(self) -> str:
-        return f"{self.title} ({self.creator.name})"
-
-    @property
-    def expires_at(self):
-        now = timezone.now()
-        time_delta = self.end_at - now
-        days_left = time_delta.days
-        hours_left = int(time_delta.seconds / 3600)
-        return days_left, hours_left
+        return f"{self.title} ({self.creator.email})"
