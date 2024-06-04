@@ -1,9 +1,22 @@
 from rest_framework import serializers
 
-from fundraising.models import Fundraising, Lot, LotCategory
+from fundraising.models import Fundraising, Lot, LotCategory, Location
+from user.serializers import UserFullNameSerializer
+
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = (
+            "id",
+            "city",
+            "state",
+        )
 
 
 class FundraisingSerializer(serializers.ModelSerializer):
+    location = LocationSerializer(many=True, read_only=True)
+
     class Meta:
         model = Fundraising
         fields = (
@@ -11,8 +24,7 @@ class FundraisingSerializer(serializers.ModelSerializer):
             "photo",
             "title",
             "description",
-            "city",
-            "state",
+            "location",
             "money_raised",
             "money_goal",
             "end_at",
@@ -20,25 +32,25 @@ class FundraisingSerializer(serializers.ModelSerializer):
 
 
 class FundraisingListSerializer(serializers.ModelSerializer):
+    count_lots = serializers.IntegerField(read_only=True)
+    location = LocationSerializer(many=False, read_only=True)
+
     class Meta:
         model = Fundraising
         fields = (
             "id",
             "photo",
             "title",
-            "city",
-            "state",
+            "location",
             "money_raised",
             "money_goal",
+            "count_lots",
         )
 
 
 class FundraisingDetailSerializer(serializers.ModelSerializer):
-    fundraiser_name = serializers.SlugRelatedField(
-        many=False,
-        read_only=True,
-        slug_field="fundraiser.name"
-    )
+    fundraiser = UserFullNameSerializer(many=False, read_only=True)
+    location = LocationSerializer(many=False, read_only=True)
 
     class Meta:
         model = Fundraising
@@ -47,13 +59,12 @@ class FundraisingDetailSerializer(serializers.ModelSerializer):
             "photo",
             "title",
             "description",
-            "city",
-            "state",
+            "location",
             "money_raised",
             "money_goal",
-            "fundraiser_name",
+            "fundraiser",
             "created_at",
-            "expires_at",
+            "end_at",
         )
 
 
@@ -107,11 +118,7 @@ class LotSerializer(serializers.ModelSerializer):
 
 
 class LotDetailSerializer(serializers.ModelSerializer):
-    creator = serializers.SlugRelatedField(
-        many=False,
-        read_only=True,
-        slug_field="name",
-    )
+    creator = UserFullNameSerializer(many=False, read_only=True)
 
     class Meta:
         model = Lot
@@ -123,5 +130,5 @@ class LotDetailSerializer(serializers.ModelSerializer):
             "current_bet",
             "creator",
             "created_at",
-            "expires_at",
+            "end_at",
         )
