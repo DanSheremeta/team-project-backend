@@ -128,6 +128,7 @@ class LotDetailSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "current_bet",
+            "minimal_bet",
             "creator",
             "created_at",
             "end_at",

@@ -1,6 +1,12 @@
 from django.contrib import admin
 
-from fundraising.models import Fundraising, LotCategory, Lot, Location
+from fundraising.models import (
+    Fundraising,
+    LotCategory,
+    Lot,
+    Location,
+    Bet
+)
 
 
 @admin.register(Fundraising)
@@ -26,3 +32,4 @@ class LotAdmin(admin.ModelAdmin):
 
 admin.site.register(LotCategory)
 admin.site.register(Location)
+admin.site.register(Bet)
