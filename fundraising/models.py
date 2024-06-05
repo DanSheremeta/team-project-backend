@@ -1,6 +1,5 @@
 import os
 import uuid
-from django.utils import timezone
 
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -72,6 +71,21 @@ class LotCategory(models.Model):
         return self.name
 
 
+class Bet(models.Model):
+    user = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        related_name="bets",
+    )
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+    )
+
+    def __str__(self) -> str:
+        return f"{self.price} - {self.user.email}"
+
+
 def lot_image_file_path(instance, filename):
     _, extension = os.path.splitext(filename)
     filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
@@ -97,12 +111,14 @@ class Lot(models.Model):
         on_delete=models.CASCADE,
         related_name="lots",
     )
-    current_bet = models.DecimalField(
-        default=0,
-        max_digits=10,
-        decimal_places=2
+    current_bet = models.ForeignKey(
+        Bet,
+        on_delete=models.CASCADE,
+        related_name="bet_lots",
+        null=True,
+        blank=True,
     )
-    minimal_bet = models.DecimalField(
+    minimal_step = models.DecimalField(
         max_digits=10,
         decimal_places=2
     )
@@ -110,13 +126,6 @@ class Lot(models.Model):
         Fundraising,
         on_delete=models.CASCADE,
         related_name="lots",
-    )
-    current_winner = models.ForeignKey(
-        get_user_model(),
-        on_delete=models.CASCADE,
-        related_name="winner_lots",
-        null=True,
-        blank=True,
     )
     creator = models.ForeignKey(
         get_user_model(),
