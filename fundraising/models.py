@@ -81,6 +81,11 @@ class Bet(models.Model):
         max_digits=10,
         decimal_places=2,
     )
+    lot = models.ForeignKey(
+        "Lot",
+        on_delete=models.CASCADE,
+        related_name="bets",
+    )
 
     def __str__(self) -> str:
         return f"{self.price} - {self.user.email}"
@@ -119,6 +124,10 @@ class Lot(models.Model):
         blank=True,
     )
     minimal_step = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+    current_price = models.DecimalField(
         max_digits=10,
         decimal_places=2
     )

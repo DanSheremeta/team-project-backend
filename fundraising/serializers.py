@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from fundraising.models import Fundraising, Lot, LotCategory, Location
+from fundraising.models import Fundraising, Lot, Location, Bet
 from user.serializers import UserFullNameSerializer
 
 
@@ -100,6 +100,16 @@ class FundraisingLotsSerializer(serializers.ModelSerializer):
         )
 
 
+class BetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bet
+        fields = (
+            "id",
+            "user",
+            "price",
+        )
+
+
 class LotSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lot
@@ -110,14 +120,14 @@ class LotSerializer(serializers.ModelSerializer):
             "description",
             "condition",
             "category",
-            "minimal_bet",
+            "minimal_step",
             "fundraising",
-            "current_winner",
             "end_at",
         )
 
 
 class LotDetailSerializer(serializers.ModelSerializer):
+    current_bet = BetSerializer(many=False, read_only=True)
     creator = UserFullNameSerializer(many=False, read_only=True)
 
     class Meta:
@@ -128,7 +138,7 @@ class LotDetailSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "current_bet",
-            "minimal_bet",
+            "minimal_step",
             "creator",
             "created_at",
             "end_at",
