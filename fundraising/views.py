@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 
-from fundraising.models import Fundraising, Lot, LotCategory
+from fundraising.models import Fundraising, Lot
 from fundraising.serializers import (
     FundraisingSerializer,
     FundraisingListSerializer,
@@ -19,6 +19,7 @@ from fundraising.serializers import (
 class FundraisingPagination(PageNumberPagination):
     page_size = 10
     max_page_size = 100
+
 
 class FundraisingViewSet(
     mixins.ListModelMixin,
@@ -55,7 +56,7 @@ class LotViewSet(
     GenericViewSet,
 ):
     queryset = Lot.objects.all()
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer) -> None:
         serializer.save(creator=self.request.user)

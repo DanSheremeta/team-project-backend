@@ -108,7 +108,7 @@ class Lot(models.Model):
     description = models.TextField()
     condition = models.CharField(
         max_length=4,
-        choices=ConditionChoices,
+        choices=ConditionChoices.choices,
         default=ConditionChoices.NEW,
     )
     category = models.ForeignKey(
