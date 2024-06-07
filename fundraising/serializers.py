@@ -121,6 +121,7 @@ class LotSerializer(serializers.ModelSerializer):
             "condition",
             "category",
             "minimal_step",
+            "current_price",
             "fundraising",
             "end_at",
         )
