@@ -107,6 +107,26 @@ class BetSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "price",
+            "lot",
+        )
+
+
+class BetCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bet
+        fields = (
+            "id",
+            "price",
+        )
+
+
+class BetLotDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bet
+        fields = (
+            "id",
+            "user",
+            "price",
         )
 
 
@@ -128,7 +148,7 @@ class LotSerializer(serializers.ModelSerializer):
 
 
 class LotDetailSerializer(serializers.ModelSerializer):
-    current_bet = BetSerializer(many=False, read_only=True)
+    current_bet = BetLotDetailSerializer(many=False, read_only=True)
     creator = UserFullNameSerializer(many=False, read_only=True)
 
     class Meta:

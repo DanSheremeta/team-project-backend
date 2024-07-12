@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from rest_framework import mixins, status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
@@ -13,6 +15,8 @@ from fundraising.serializers import (
     FundraisingLotsSerializer,
     LotSerializer,
     LotDetailSerializer,
+    BetSerializer,
+    BetCreateSerializer,
 )
 
 
@@ -64,4 +68,43 @@ class LotViewSet(
     def get_serializer_class(self):
         if self.action == "retrieve":
             return LotDetailSerializer
+        if self.action == "bet_create":
+            return BetCreateSerializer
         return LotSerializer
+
+    @action(
+        methods=["POST"],
+        detail=True,
+        url_path="bet",
+    )
+    def bet_create(self, request, pk=None) -> Response:
+        obj = self.get_object()
+        user = request.user
+        price = Decimal(request.data["price"])
+
+        if price < (obj.current_price + obj.minimal_step):
+            message = {
+                "error": "Price should be greater than current price + minimal step!",
+            }
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+        data = {
+            "user": user.id,
+            "price": price,
+            "lot": obj.id,
+        }
+        serializer = BetSerializer(data=data)
+
+        if serializer.is_valid():
+            bet = serializer.save()
+
+            # if obj not in user.tracked_lots:
+            #     user.tracked_lots.add(obj)
+            #     user.save()
+
+            obj.current_price = bet.price
+            obj.current_bet = bet
+            obj.save()
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
