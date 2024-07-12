@@ -148,6 +148,8 @@ class LotSerializer(serializers.ModelSerializer):
 
 
 class LotDetailSerializer(serializers.ModelSerializer):
+    total_bets = serializers.IntegerField(read_only=True)
+    total_participants = serializers.IntegerField(read_only=True)
     current_bet = BetLotDetailSerializer(many=False, read_only=True)
     creator = UserFullNameSerializer(many=False, read_only=True)
 
@@ -161,6 +163,8 @@ class LotDetailSerializer(serializers.ModelSerializer):
             "current_bet",
             "minimal_step",
             "creator",
+            "total_bets",
+            "total_participants",
             "created_at",
             "end_at",
         )

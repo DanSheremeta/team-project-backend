@@ -151,3 +151,11 @@ class Lot(models.Model):
 
     def __str__(self) -> str:
         return f"{self.title} ({self.creator.email})"
+
+    @property
+    def total_bets(self) -> int:
+        return self.bets.count()
+
+    @property
+    def total_participants(self) -> int:
+        return self.bets.values("user").distinct().count()
