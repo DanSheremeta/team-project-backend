@@ -1,7 +1,6 @@
 import os
 import uuid
 
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.text import slugify
 
@@ -44,7 +43,7 @@ class Fundraising(models.Model):
         decimal_places=2
     )
     fundraiser = models.ForeignKey(
-        get_user_model(),
+        "user.User",
         on_delete=models.CASCADE,
         related_name="fundraisings",
     )
@@ -73,7 +72,7 @@ class LotCategory(models.Model):
 
 class Bet(models.Model):
     user = models.ForeignKey(
-        get_user_model(),
+        "user.User",
         on_delete=models.CASCADE,
         related_name="bets",
     )
@@ -137,7 +136,7 @@ class Lot(models.Model):
         related_name="lots",
     )
     creator = models.ForeignKey(
-        get_user_model(),
+        "user.User",
         on_delete=models.CASCADE,
         related_name="creator_lots",
     )

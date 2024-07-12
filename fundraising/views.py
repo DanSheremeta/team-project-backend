@@ -98,9 +98,9 @@ class LotViewSet(
         if serializer.is_valid():
             bet = serializer.save()
 
-            # if obj not in user.tracked_lots:
-            #     user.tracked_lots.add(obj)
-            #     user.save()
+            if obj not in user.tracked_lots.all():
+                user.tracked_lots.add(obj)
+                user.save()
 
             obj.current_price = bet.price
             obj.current_bet = bet
