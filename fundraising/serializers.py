@@ -146,6 +146,20 @@ class LotSerializer(serializers.ModelSerializer):
             "end_at",
         )
 
+    def validate(self, data):
+        fundraising = data.get("fundraising")
+        end_at = data.get("end_at")
+
+        if fundraising and end_at and end_at > fundraising.end_at:
+            raise serializers.ValidationError(
+                {
+                    "end_at": f"The lot end date must be less than or equal to "
+                              f"the fundraising end date ({fundraising.end_at}).",
+                }
+            )
+
+        return data
+
 
 class LotDetailSerializer(serializers.ModelSerializer):
     total_bets = serializers.IntegerField(read_only=True)
