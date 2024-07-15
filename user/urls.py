@@ -5,10 +5,11 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-from user.views import CreateUserView
+from user.views import CreateUserView, UserTrackedLotsListView
 
 urlpatterns = [
     path("register/", CreateUserView.as_view(), name="register"),
+    path("lots/", UserTrackedLotsListView.as_view(), name="tracked-lots"),
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),

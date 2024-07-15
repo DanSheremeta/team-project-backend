@@ -31,7 +31,7 @@ class FundraisingViewSet(
     GenericViewSet,
 ):
     queryset = Fundraising.objects.all()
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     pagination_class = FundraisingPagination
 
     def get_serializer_class(self):
