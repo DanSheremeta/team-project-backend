@@ -107,6 +107,26 @@ class BetSerializer(serializers.ModelSerializer):
             "id",
             "user",
             "price",
+            "lot",
+        )
+
+
+class BetCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bet
+        fields = (
+            "id",
+            "price",
+        )
+
+
+class BetLotDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bet
+        fields = (
+            "id",
+            "user",
+            "price",
         )
 
 
@@ -126,9 +146,25 @@ class LotSerializer(serializers.ModelSerializer):
             "end_at",
         )
 
+    def validate(self, data):
+        fundraising = data.get("fundraising")
+        end_at = data.get("end_at")
+
+        if fundraising and end_at and end_at > fundraising.end_at:
+            raise serializers.ValidationError(
+                {
+                    "end_at": f"The lot end date must be less than or equal to "
+                              f"the fundraising end date ({fundraising.end_at}).",
+                }
+            )
+
+        return data
+
 
 class LotDetailSerializer(serializers.ModelSerializer):
-    current_bet = BetSerializer(many=False, read_only=True)
+    total_bets = serializers.IntegerField(read_only=True)
+    total_participants = serializers.IntegerField(read_only=True)
+    current_bet = BetLotDetailSerializer(many=False, read_only=True)
     creator = UserFullNameSerializer(many=False, read_only=True)
 
     class Meta:
@@ -141,6 +177,8 @@ class LotDetailSerializer(serializers.ModelSerializer):
             "current_bet",
             "minimal_step",
             "creator",
+            "total_bets",
+            "total_participants",
             "created_at",
             "end_at",
         )

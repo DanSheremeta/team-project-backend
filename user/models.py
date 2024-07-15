@@ -5,6 +5,8 @@ from django.contrib.auth.models import (
 from django.db import models
 from django.utils.translation import gettext as _
 
+from fundraising.models import Lot
+
 
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -45,6 +47,11 @@ class User(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
+    tracked_lots = models.ManyToManyField(
+        Lot,
+        related_name="tracked_by",
+        blank=True,
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
